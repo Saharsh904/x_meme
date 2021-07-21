@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+    <title>Saharsh Kumar</title>
+    <style>
+        #meme_data {
+            width: 600px;
+            height: 590px;
+            overflow: scroll;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWg6NwaIct2l1vt8q_R6k7UTKs4mRHm4YHEg&usqp=CAU"
+                width="80" height="80" class="d-inline-block align-top mr-2" alt="">
+            MemeStream
+        </a>
+    </nav>
+    <br>
+    <div class="container">
+
+        <div class="row">
+
+            <!-- filters -->
+
+            <div class="col-sm">
+                <div class="container">
+                    <h2 class="text-center">Create Meme</h2>
+                    <br>
+
+
+                    <form action="" method="POST" class="">
+
+                        <div class="form-group">
+                            <label for="exampleFormControlInput1">Meme Owner</label>
+                            <input type="text" class="form-control" id="meme_owner" placeholder="Your name"><br>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleFormControlInput1">Caption</label>
+                            <input type="text" class="form-control" id="Caption"
+                                placeholder="Be Creative With the Caption"><br>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleFormControlInput1">Meme Url</label>
+                            <input type="url" class="form-control" id="meme_URL"
+                                placeholder="Enter URL of Your Meme Here"><br>
+                        </div>
+
+                        <input type="submit" class='btn btn-success' value='Submit' id="datapost">
+
+                    </form>
+                </div>
+            </div>
+
+            <!-- memes -->
+            <div id="memelist" class='col-lg-7 mx-auto '>
+                <h2 class="text-center">Memes</h2>
+                <div class="row mx-auto" id="meme_data">
+
+
+
+
+
+
+                    <div class="card mx-15 mb-15" id="allpost">
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <script>
+        document.getElementById("datapost").addEventListener("click", makerequest);
+
+        //  Promise Then || Form submitted
+        function makerequest(e) {
+            e.preventDefault()
+            let meme_owner = document.getElementById("meme_owner").value
+            let meme_URL = document.getElementById("meme_URL").value
+            let Caption = document.getElementById("Caption").value
+            console.log("Button Clicked")
+            const myInit = {
+
+                method: 'POST',
+                // mode:'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ meme_owner: meme_owner, meme_URL: meme_URL, Caption: Caption })
+            }
+            console.log("Body", myInit.body)
+            fetch('http://saharsh904.pythonanywhere.com/memes/', myInit)
+                .then((res) => {
+                    if (!res.ok) {
+                        throw Error(res.statusText)
+                    }
+                    return res.json()
+                }).then((data) => { console.log(data) })
+                .catch((error) => console.log(error))
+            window.location.reload();
+        }
+
+
+
+
+
+
+        showrequest()
+        function showrequest() {
+            console.log("Button clicked")
+            fetch('http://saharsh904.pythonanywhere.com/memes/')
+                .then((res) => {
+                    if (!res.ok) {
+                        throw Error(res.statusText)
+                    }
+                    return res.json()
+                })
+                .then((data) => {
+                    console.log("Data", data)
+                    let output = document.getElementById("allpost")
+                    data.forEach(element => {
+                        output.innerHTML += `
+                <h5>Posted By: <b>${element.meme_owner}</b></h5>
+                <p>Published On: ${new Date()}</p>
+                <p>${element.Caption}</p>
+                <img  src="${element.meme_URL}" alt="" width="500" height="280">
+                <hr>
+                <br>
+                
+                
+                
+                `
+                    });
+
+                })
+                .catch((error) => { console.log(error) })
+        }
+
+
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
+        integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js"
+        integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>
